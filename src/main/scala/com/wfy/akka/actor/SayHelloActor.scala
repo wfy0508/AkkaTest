@@ -1,4 +1,4 @@
-package com.wfy.akka
+package com.wfy.akka.actor
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 
@@ -18,11 +18,10 @@ class SayHelloActor extends Actor {
   override def receive: Receive = {
     case "hello" => println("收到hello， 回应hello too")
     case "ok" => println("收到ok， 回应ok too")
-    case "exit" => {
+    case "exit" =>
       println("接收到exit指令，退出系统")
       context.stop(self) //停止actorRef
       context.system.terminate() //退出ActorSystem
-    }
     case _ => println("匹配不到")
   }
 
@@ -43,7 +42,7 @@ object SayHelloActorDemo {
     //3. sayHelloActor实例会关联到自己的sayHelloActorRef
     //4. sayHelloActorRef将消息发给消息分发器（Dispatcher Massage）
     //5. 消息分发器在底层找到sayHelloActor（取决于sayHelloActorRef）的MailBox[sayHelloActor]
-    //6. MailBox是Runnable状态，持有sayHelloActor的实例，收到消息后，调用实例的receive方法
+    //6. MailBox是Runnable状态，会一直持有sayHelloActor的实例，收到消息后，调用实例的receive方法
     sayHelloActorRef ! "hello" //给sayHelloActor发送消息（邮箱）
     //再发一个ok
     sayHelloActorRef ! "ok"
